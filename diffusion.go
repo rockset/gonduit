@@ -35,3 +35,17 @@ func (c *Conn) DiffusionRepositorySearch(
 	}
 	return &resp, nil
 }
+
+// DiffusionCommitSearchMethod is the method name on API.
+const DiffusionCommitSearchMethod = "diffusion.commit.search"
+
+// DiffusionCommitSearch calls "diffusion.commit.search" Conduit API method.
+func (c *Conn) DiffusionCommitSearch(
+	req requests.DiffusionCommitSearchRequest,
+) (*responses.DiffusionCommitSearchResponse, error) {
+	var resp responses.DiffusionCommitSearchResponse
+	if err := c.Call(DiffusionCommitSearchMethod, &req, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}

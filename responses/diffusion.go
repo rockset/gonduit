@@ -80,3 +80,48 @@ type RepositoryURI struct {
 	Effective  string `json:"effective"`
 	Normalized string `json:"normalized"`
 }
+
+// DiffusionCommitSearchResponse contains information about a particular search result.
+type DiffusionCommitSearchResponse struct {
+	// Data contains search results.
+	Data []*DiffusionCommitSearchResponseItem `json:"data"`
+
+	// Curson contains paging data.
+	Cursor SearchCursor `json:"cursor,omitempty"`
+}
+
+// DiffusionCommitSearchResponseItem contains information about a particular search result.
+type DiffusionCommitSearchResponseItem struct {
+	ID     uint64                                  `json:"id"`
+	Type   string                                  `json:"type"`
+	PHID   string                                  `json:"phid"`
+	Fields DiffusionCommitSearchResponseItemFields `json:"fields"`
+}
+
+// DiffusionCommitSearchResponseItemFields is a collection of object fields.
+type DiffusionCommitSearchResponseItemFields struct {
+	RepositoryPHID string                     `json:"repositoryPHID"`
+	Message        string                     `json:"message"`
+	IsUnreachable  bool                       `json:"isUnreachable"`
+	IsImported     bool                       `json:"isImported"`
+	Author         DiffusionCommitUser        `json:"author"`
+	Committer      DiffusionCommitUser        `json:"committer"`
+	AuditStatus    DiffusionCommitAuditStatus `json:"auditStatus"`
+}
+
+// DiffusionCommitUser is used both for the commit author and committer
+type DiffusionCommitUser struct {
+	Name         string             `json:"name"`
+	Email        string             `json:"email"`
+	Raw          string             `json:"raw"`
+	Epoch        util.UnixTimestamp `json:"epoch"`
+	IdentityPHID string             `json:"identityPHID"`
+	UserPHID     string             `json:"userPHID"`
+}
+
+// DiffusionCommitAuditStatus contains the commit audit status.
+type DiffusionCommitAuditStatus struct {
+	Value  string `json:"value"`
+	Name   string `json:"name"`
+	Closed bool   `json:"closed"`
+}

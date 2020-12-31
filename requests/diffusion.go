@@ -62,3 +62,20 @@ type DiffusionRepositorySearchAttachments struct {
 	// Projects requests to get information about projects.
 	Projects bool `json:"projects,omitempty"`
 }
+
+// DiffusionCommitSearchRequest represents a request to the diffusion.commit.search API method.
+type DiffusionCommitSearchRequest struct {
+	Constraints *DiffusionCommitSearchConstraints `json:"constraints,omitempty"`
+
+	*entities.Cursor
+	Request
+}
+
+// DiffusionCommitSearchConstraints describes search criteria for request.
+type DiffusionCommitSearchConstraints struct {
+	IDs      []int    `json:"ids,omitempty"`
+	PHIDs    []int    `json:"phids,omitempty"`
+	Statuses []string `json:"status,omitempty"`
+	Authors  []string `json:"authors,omitempty"`
+	Auditors []string `json:"auditors,omitempty"`
+}

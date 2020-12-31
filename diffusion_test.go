@@ -1,6 +1,8 @@
 package gonduit
 
 import (
+	"github.com/stretchr/testify/require"
+	"io/ioutil"
 	"net/http"
 	"testing"
 
@@ -147,4 +149,31 @@ func TestDiffusionRepositorySearch(t *testing.T) {
 		},
 	}
 	assert.Equal(t, &want, resp)
+}
+
+func TestDiffusionCommitSearch(t *testing.T) {
+	s := server.New()
+	defer s.Close()
+	s.RegisterCapabilities()
+	response, err := ioutil.ReadFile("testdata/diffusion_commit_search.json")
+	require.NoError(t, err)
+	s.RegisterMethod(DiffusionCommitSearchMethod, http.StatusOK, server.ResponseFromJSON(string(response)))
+
+	c, err := Dial(s.GetURL(), &core.ClientOptions{
+		APIToken: "some-token",
+	})
+	assert.Nil(t, err)
+	req := requests.DiffusionCommitSearchRequest{
+		Constraints: &requests.DiffusionCommitSearchConstraints{
+			IDs: []int{51673},
+		},
+	}
+	resp, err := c.DiffusionCommitSearch(req)
+	require.NoError(t, err)
+	require.Len(t, resp.Data, 1)
+	cmt := resp.Data[0]
+	assert.Equal(t, uint64(51673), cmt.ID)
+	assert.Equal(t, "Martin Englund", cmt.Fields.Author.Name)
+	assert.True(t, cmt.Fields.IsImported)
+	assert.False(t, cmt.Fields.IsUnreachable)
 }
